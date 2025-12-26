@@ -76,4 +76,29 @@ public class LibroEntity {
         }
         return sb.toString() + " (" + String.format("%.1f", media) + ")";
     }
+
+    // Metodo statico per validazione ISBN
+    public static String getIsbnValidationMessage(String isbn) {
+        if (isbn == null || isbn.trim().isEmpty()) {
+            return "ISBN non puo essere vuoto";
+        }
+
+        String clean = isbn.replaceAll("[\\s-]", "");
+
+        if (clean.length() != 10 && clean.length() != 13) {
+            return "ISBN deve avere 10 o 13 caratteri (trovati: " + clean.length() + ")";
+        }
+
+        if (clean.length() == 10) {
+            if (!clean.matches("\\d{9}[\\dXx]")) {
+                return "ISBN-10 non valido: deve contenere 9 cifre + cifra di controllo";
+            }
+        } else {
+            if (!clean.matches("\\d{13}")) {
+                return "ISBN-13 non valido: deve contenere 13 cifre";
+            }
+        }
+
+        return null;
+    }
 }

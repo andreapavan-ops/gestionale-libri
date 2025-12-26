@@ -3,7 +3,6 @@ package it.biblioteca.web.controller;
 import it.biblioteca.web.entity.LibroEntity;
 import it.biblioteca.web.entity.RecensioneEntity;
 import it.biblioteca.web.service.LibroService;
-import it.biblioteca.model.Libro;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,7 +43,7 @@ public class LibroController {
     @PostMapping("/libri/salva")
     public String salvaLibro(@ModelAttribute LibroEntity libro, RedirectAttributes redirectAttributes) {
         // Validazione ISBN
-        String erroreIsbn = Libro.getIsbnValidationMessage(libro.getIsbn());
+        String erroreIsbn = LibroEntity.getIsbnValidationMessage(libro.getIsbn());
         if (erroreIsbn != null) {
             redirectAttributes.addFlashAttribute("errore", erroreIsbn);
             return "redirect:/libri/nuovo";
