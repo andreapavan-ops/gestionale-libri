@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${libro.titolo}">Dettaglio Libro</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <header>
+        <h1>📚 Gestionale Biblioteca</h1>
+        <p>Carlo & AnnaMaria</p>
+    </header>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="/libri">Catalogo</a>
+        <a href="/libri/nuovo">Aggiungi Libro</a>
+        <a href="/wishlist">Wishlist</a>
+        <a href="/libri/importa">Importa</a>
+    </nav>
+
+    <main>
+        <!-- Messaggi -->
+        <div class="alert alert-success" th:if="${successo}" th:text="${successo}"></div>
+
+        <div class="book-detail">
+            <div class="book-info">
+                <h2 th:text="${libro.titolo}">Titolo del Libro</h2>
+                <p class="author">di <strong th:text="${libro.autore}">Autore</strong></p>
+
+                <div class="book-meta">
+                    <div class="meta-item">
+                        <span class="label">ISBN:</span>
+                        <span th:text="${libro.isbn}">ISBN</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="label">Anno:</span>
+                        <span th:text="${libro.annoPubblicazione}">Anno</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="label">Genere:</span>
+                        <span th:text="${libro.genere}">Genere</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="label">Valutazione:</span>
+                        <span class="stars" th:text="${libro.mediaVotiVisual}">★★★☆☆</span>
+                    </div>
+                </div>
+
+                <div class="book-actions">
+                    <a th:href="@{/libri/modifica/{isbn}(isbn=${libro.isbn})}" class="btn btn-primary">Modifica</a>
+                    <a href="/libri" class="btn btn-secondary">Torna al catalogo</a>
+                </div>
+            </div>
+
+            <!-- Sezione Recensioni -->
+            <div class="reviews-section">
+                <h3>Recensioni</h3>
+
+                <div class="reviews-list" th:if="${not #lists.isEmpty(libro.recensioni)}">
+                    <div class="review-card" th:each="recensione : ${libro.recensioni}">
+                        <div class="review-header">
+                            <span class="reviewer" th:text="${recensione.utente}">Utente</span>
+                            <span class="review-date" th:text="${recensione.data}">Data</span>
+                        </div>
+                        <div class="review-stars" th:text="${recensione.stelleVisual}">★★★★☆</div>
+                        <p class="review-comment" th:text="${recensione.commento}">Commento</p>
+                    </div>
+                </div>
+
+                <p th:if="${#lists.isEmpty(libro.recensioni)}" class="no-reviews">
+                    Nessuna recensione ancora. Sii il primo a recensire!
+                </p>
+
+                <!-- Form nuova recensione -->
+                <div class="review-form">
+                    <h4>Aggiungi una recensione</h4>
+                    <form th:action="@{/libri/{isbn}/recensione(isbn=${libro.isbn})}" method="post">
+                        <div class="form-group">
+                            <label for="utente">Il tuo nome</label>
+                            <input type="text" id="utente" name="utente" required placeholder="es. Mario Rossi">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="stelle">Valutazione</label>
+                            <select id="stelle" name="stelle" required>
+                                <option value="5">★★★★★ (5)</option>
+                                <option value="4">★★★★☆ (4)</option>
+                                <option value="3">★★★☆☆ (3)</option>
+                                <option value="2">★★☆☆☆ (2)</option>
+                                <option value="1">★☆☆☆☆ (1)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="commento">Commento</label>
+                            <textarea id="commento" name="commento" rows="3"
+                                      placeholder="Scrivi la tua opinione sul libro..."></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Invia Recensione</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Gestionale Libri - Carlo & AnnaMaria - by Andrea Pavan</p>
+    </footer>
+</body>
+</html>

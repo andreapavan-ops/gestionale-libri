@@ -1,0 +1,30 @@
+==========================================
+   GESTIONALE LIBRI - Avvio su Windows
+==========================================
+
+HAI 2 OPZIONI:
+
+------------------------------------------
+OPZIONE 1: AVVIO RAPIDO (richiede Java)
+------------------------------------------
+Se hai già Java 21 installato:
+
+   Doppio click su "GestionaleLibri.vbs"
+   
+   (Avvia senza finestra nera del terminale)
+
+------------------------------------------
+OPZIONE 2: CREARE INSTALLER COMPLETO
+------------------------------------------
+Questa opzione crea un vero programma installabile 
+con icona, menu Start e Java incluso:
+
+1. Installa JDK 21 da https://adoptium.net/
+2. Doppio click su "crea_installer.bat"
+3. Attendi 1-2 minuti
+4. Troverai "Gestionale Libri-1.0.exe" nella cartella output/
+
+L'exe puo' essere installato su qualsiasi PC Windows
+senza bisogno di Java!
+
+==========================================

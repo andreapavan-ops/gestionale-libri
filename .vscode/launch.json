@@ -1,0 +1,27 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Avvia Gestionale GUI",
+            "request": "launch",
+            "mainClass": "GestionaleGUI",
+            "classPaths": [
+                "${workspaceFolder}",
+                "${workspaceFolder}/lib/gson-2.10.1.jar",
+                "${workspaceFolder}/lib/itextpdf-5.5.13.3.jar"
+            ]
+        },
+        {
+            "type": "java",
+            "name": "Avvia Console (Main)",
+            "request": "launch",
+            "mainClass": "Main",
+            "classPaths": [
+                "${workspaceFolder}",
+                "${workspaceFolder}/lib/gson-2.10.1.jar",
+                "${workspaceFolder}/lib/itextpdf-5.5.13.3.jar"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,42 @@
+==========================================
+   ISTRUZIONI PER CREARE L'INSTALLER WINDOWS
+==========================================
+
+REQUISITI:
+- Windows 10 o 11
+- JDK 21 (scaricalo da https://adoptium.net/)
+
+PASSAGGI:
+
+1. Installa JDK 21 su Windows
+   - Vai su https://adoptium.net/
+   - Scarica "Temurin 21" per Windows x64
+   - Installa con le opzioni predefinite
+   - IMPORTANTE: seleziona "Set JAVA_HOME" durante l'installazione
+
+2. Copia questa cartella "windows_build" sul PC Windows
+
+3. Apri la cartella "windows_build" in Esplora File
+
+4. Fai DOPPIO CLICK su "crea_installer.bat"
+
+5. Attendi la creazione (circa 1 minuto)
+
+6. L'installer sara' in: output\Gestionale Libri-1.0.exe
+
+==========================================
+   DISTRIBUZIONE
+==========================================
+
+Il file "Gestionale Libri-1.0.exe" e' un installer completo:
+- Include Java (non serve installarlo separatamente)
+- Crea collegamento sul Desktop
+- Crea voce nel menu Start
+- Dimensione: circa 60 MB
+
+Per installare su altri PC Windows:
+- Copia il file .exe
+- Doppio click per installare
+- Segui la procedura guidata
+
+==========================================

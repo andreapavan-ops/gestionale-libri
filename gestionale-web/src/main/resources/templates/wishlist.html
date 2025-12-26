@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'Wishlist di ' + ${utente}">Wishlist</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <header>
+        <h1>Gestionale Biblioteca</h1>
+        <p>Carlo & AnnaMaria</p>
+    </header>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="/libri">Catalogo</a>
+        <a href="/libri/nuovo">Aggiungi Libro</a>
+        <a href="/wishlist" class="active">Wishlist</a>
+    </nav>
+
+    <main>
+        <div class="page-header">
+            <h2 th:text="'Wishlist di ' + ${utente}">Wishlist</h2>
+            <span class="badge" th:text="${totale} + ' libri (' + ${daAcquistare} + ' da acquistare)'">0 libri</span>
+        </div>
+
+        <!-- Messaggi -->
+        <div class="alert alert-success" th:if="${successo}" th:text="${successo}"></div>
+
+        <div style="margin-bottom: 20px;">
+            <a th:href="@{/wishlist/{u}/nuovo(u=${utente})}" class="btn btn-primary">Aggiungi alla Wishlist</a>
+            <a href="/wishlist" class="btn btn-secondary">Cambia Utente</a>
+        </div>
+
+        <!-- Tabella wishlist -->
+        <div class="table-container" th:if="${not #lists.isEmpty(items)}">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Titolo</th>
+                        <th>Autore</th>
+                        <th>Note</th>
+                        <th>Data</th>
+                        <th>Stato</th>
+                        <th>Azioni</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="item : ${items}" th:classappend="${item.acquistato} ? 'row-acquired' : ''">
+                        <td th:text="${item.titolo}" th:style="${item.acquistato} ? 'text-decoration: line-through; color: #888;' : ''">Titolo</td>
+                        <td th:text="${item.autore}">Autore</td>
+                        <td th:text="${item.note}">Note</td>
+                        <td th:text="${item.dataAggiunta}">Data</td>
+                        <td>
+                            <span th:if="${item.acquistato}" style="color: green; font-weight: bold;">Acquistato</span>
+                            <span th:unless="${item.acquistato}" style="color: orange;">Da acquistare</span>
+                        </td>
+                        <td class="actions">
+                            <a th:if="${!item.acquistato}"
+                               th:href="@{/wishlist/{u}/acquistato/{id}(u=${utente}, id=${item.id})}"
+                               class="btn btn-small" style="background: #27ae60;">Acquistato</a>
+                            <a th:if="${item.acquistato}"
+                               th:href="@{/wishlist/{u}/non-acquistato/{id}(u=${utente}, id=${item.id})}"
+                               class="btn btn-small btn-edit">Ripristina</a>
+                            <a th:href="@{/wishlist/{u}/rimuovi/{id}(u=${utente}, id=${item.id})}"
+                               class="btn btn-small btn-delete"
+                               onclick="return confirm('Sei sicuro di voler rimuovere questo libro dalla wishlist?')">Rimuovi</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="empty-state" th:if="${#lists.isEmpty(items)}">
+            <p>La wishlist e' vuota.</p>
+            <a th:href="@{/wishlist/{u}/nuovo(u=${utente})}" class="btn btn-primary">Aggiungi il primo libro desiderato</a>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Gestionale Libri - Carlo & AnnaMaria - by Andrea Pavan</p>
+    </footer>
+</body>
+</html>

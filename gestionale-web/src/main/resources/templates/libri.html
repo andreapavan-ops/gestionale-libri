@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catalogo Libri</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <header>
+        <h1>📚 Gestionale Biblioteca</h1>
+        <p>Carlo & AnnaMaria</p>
+    </header>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="/libri" class="active">Catalogo</a>
+        <a href="/libri/nuovo">Aggiungi Libro</a>
+        <a href="/wishlist">Wishlist</a>
+        <a href="/libri/importa">Importa</a>
+    </nav>
+
+    <main>
+        <div class="page-header">
+            <h2>Catalogo Libri</h2>
+            <span class="badge" th:text="${totaleLibri} + ' libri'">0 libri</span>
+        </div>
+
+        <!-- Messaggi -->
+        <div class="alert alert-success" th:if="${successo}" th:text="${successo}"></div>
+        <div class="alert alert-error" th:if="${errore}" th:text="${errore}"></div>
+
+        <!-- Ricerca -->
+        <form action="/cerca" method="get" class="search-form">
+            <input type="text" name="q" placeholder="Cerca per titolo o autore..." th:value="${query}">
+            <button type="submit" class="btn btn-primary">Cerca</button>
+            <a href="/libri" class="btn btn-secondary" th:if="${query}">Mostra tutti</a>
+        </form>
+
+        <!-- Tabella libri -->
+        <div class="table-container" th:if="${not #lists.isEmpty(libri)}">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ISBN</th>
+                        <th>Titolo</th>
+                        <th>Autore</th>
+                        <th>Anno</th>
+                        <th>Genere</th>
+                        <th>Valutazione</th>
+                        <th>Azioni</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="libro : ${libri}">
+                        <td th:text="${libro.isbn}">ISBN</td>
+                        <td th:text="${libro.titolo}">Titolo</td>
+                        <td th:text="${libro.autore}">Autore</td>
+                        <td th:text="${libro.annoPubblicazione}">Anno</td>
+                        <td th:text="${libro.genere}">Genere</td>
+                        <td th:text="${libro.mediaVotiVisual}">★★★☆☆</td>
+                        <td class="actions">
+                            <a th:href="@{/libri/dettaglio/{isbn}(isbn=${libro.isbn})}" class="btn btn-small">Dettagli</a>
+                            <a th:href="@{/libri/modifica/{isbn}(isbn=${libro.isbn})}" class="btn btn-small btn-edit">Modifica</a>
+                            <a th:href="@{/libri/elimina/{isbn}(isbn=${libro.isbn})}"
+                               class="btn btn-small btn-delete"
+                               onclick="return confirm('Sei sicuro di voler eliminare questo libro?')">Elimina</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="empty-state" th:if="${#lists.isEmpty(libri)}">
+            <p>Nessun libro trovato.</p>
+            <a href="/libri/nuovo" class="btn btn-primary">Aggiungi il primo libro</a>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Gestionale Libri - Carlo & AnnaMaria - by Andrea Pavan</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aggiungi alla Wishlist</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <header>
+        <h1>Gestionale Biblioteca</h1>
+        <p>Carlo & AnnaMaria</p>
+    </header>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="/libri">Catalogo</a>
+        <a href="/libri/nuovo">Aggiungi Libro</a>
+        <a href="/wishlist" class="active">Wishlist</a>
+    </nav>
+
+    <main>
+        <div class="form-container">
+            <h2 th:text="'Aggiungi alla Wishlist di ' + ${utente}">Aggiungi alla Wishlist</h2>
+
+            <form th:action="@{/wishlist/{u}/aggiungi(u=${utente})}" method="post">
+                <div class="form-group">
+                    <label for="titolo">Titolo del libro *</label>
+                    <input type="text" id="titolo" name="titolo" required
+                           placeholder="es. Il Signore degli Anelli">
+                </div>
+
+                <div class="form-group">
+                    <label for="autore">Autore</label>
+                    <input type="text" id="autore" name="autore"
+                           placeholder="es. J.R.R. Tolkien">
+                </div>
+
+                <div class="form-group">
+                    <label for="note">Note</label>
+                    <textarea id="note" name="note" rows="3"
+                              placeholder="Perche' lo vuoi? Dove lo hai visto?"></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Aggiungi alla Wishlist</button>
+                    <a th:href="@{/wishlist/{u}(u=${utente})}" class="btn btn-secondary">Annulla</a>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Gestionale Libri - Carlo & AnnaMaria - by Andrea Pavan</p>
+    </footer>
+</body>
+</html>

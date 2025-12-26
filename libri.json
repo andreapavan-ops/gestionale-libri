@@ -1,0 +1,65 @@
+[
+  {
+    "isbn": "978-0316769488",
+    "titolo": "Orgoglio e pregiudizio",
+    "autore": "ane Austen",
+    "annoPubblicazione": 1813,
+    "genere": "Romanzo sentimentale / Classico",
+    "recensioni": [
+      {
+        "utente": "Carlo",
+        "stelle": 5,
+        "commento": "Un grande classico senza tempo che racconta con ironia e intelligenza l’amore, le convenzioni sociali e l’orgoglio personale.",
+        "data": "21/12/2025"
+      },
+      {
+        "utente": "AnnaMaria",
+        "stelle": 4,
+        "commento": "La scrittura è elegante ma scorrevole, e il romanzo riesce a essere romantico, critico e divertente allo stesso tempo.",
+        "data": "21/12/2025"
+      }
+    ]
+  },
+  {
+    "isbn": "978-8804607748",
+    "titolo": "La solitudine dei numeri primi",
+    "autore": "Paolo Giordano",
+    "annoPubblicazione": 2008,
+    "genere": "Narrativa contemporanea",
+    "recensioni": [
+      {
+        "utente": "Carlo",
+        "stelle": 3,
+        "commento": "Romanzo di formazione che esplora i traumi e le connessioni difficili tra due personaggi.",
+        "data": "21/12/2025"
+      },
+      {
+        "utente": "AnnaMaria",
+        "stelle": 2,
+        "commento": "poco dinamico e stilisticamente difficoltoso",
+        "data": "21/12/2025"
+      }
+    ]
+  },
+  {
+    "isbn": "978-8833571683",
+    "titolo": "La vita bugiarda degli adulti",
+    "autore": "Elena Ferrante",
+    "annoPubblicazione": 2019,
+    "genere": "Narrativa contemporanea",
+    "recensioni": [
+      {
+        "utente": "Carlo",
+        "stelle": 4,
+        "commento": "racconta con intensità il passaggio dall’infanzia all’adolescenza di Giovanna, tra verità e bugie delle relazioni familiari e sociali.",
+        "data": "21/12/2025"
+      },
+      {
+        "utente": "AnnaMaria",
+        "stelle": 5,
+        "commento": "Stile potente e coinvolgente, con personaggi profondamente umani",
+        "data": "21/12/2025"
+      }
+    ]
+  }
+]

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Importa Wishlist da Desktop</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <header>
+        <h1>Gestionale Biblioteca</h1>
+        <p>Carlo & AnnaMaria</p>
+    </header>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="/libri">Catalogo</a>
+        <a href="/libri/nuovo">Aggiungi Libro</a>
+        <a href="/wishlist" class="active">Wishlist</a>
+        <a href="/libri/importa">Importa</a>
+    </nav>
+
+    <main>
+        <div class="form-container">
+            <h2>Importa Wishlist da Desktop</h2>
+
+            <p style="margin-bottom: 20px; color: #666;">
+                Carica il file <strong>wishlist.json</strong> generato dalla versione desktop
+                per importare le liste dei desideri nel database online.
+            </p>
+
+            <!-- Messaggi -->
+            <div class="alert alert-error" th:if="${errore}" th:text="${errore}"></div>
+            <div class="alert alert-success" th:if="${successo}" th:text="${successo}"></div>
+
+            <form th:action="@{/wishlist/importa}" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="file">Seleziona file wishlist.json</label>
+                    <input type="file" id="file" name="file" accept=".json" required
+                           style="padding: 10px; border: 2px dashed #ccc; border-radius: 8px; width: 100%;">
+                    <small>Il file si trova nella cartella dove hai avviato l'applicazione desktop</small>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Importa Wishlist</button>
+                    <a href="/wishlist" class="btn btn-secondary">Annulla</a>
+                </div>
+            </form>
+
+            <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+                <h3 style="margin-bottom: 10px;">Come trovare il file wishlist.json:</h3>
+                <ol style="margin-left: 20px; line-height: 1.8;">
+                    <li>Apri il Finder (Mac) o Esplora File (Windows)</li>
+                    <li>Vai nella cartella dove hai avviato l'applicazione desktop</li>
+                    <li>Cerca il file <code style="background: #e9ecef; padding: 2px 6px; border-radius: 4px;">wishlist.json</code></li>
+                    <li>Selezionalo e caricalo qui sopra</li>
+                </ol>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Gestionale Libri - Carlo & AnnaMaria - by Andrea Pavan</p>
+    </footer>
+</body>
+</html>

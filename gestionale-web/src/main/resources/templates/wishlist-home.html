@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wishlist - Scegli Utente</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <header>
+        <h1>Gestionale Biblioteca</h1>
+        <p>Carlo & AnnaMaria</p>
+    </header>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="/libri">Catalogo</a>
+        <a href="/libri/nuovo">Aggiungi Libro</a>
+        <a href="/wishlist" class="active">Wishlist</a>
+        <a href="/libri/importa">Importa</a>
+    </nav>
+
+    <main>
+        <div class="hero">
+            <h2>Wishlist - Libri Desiderati</h2>
+            <p>Seleziona un utente per vedere o gestire la sua lista dei desideri</p>
+
+            <div class="book-grid" style="margin-top: 30px;">
+                <div class="book-card" th:each="utente : ${utenti}">
+                    <h4 th:text="${utente}">Utente</h4>
+                    <p class="genre">Lista personale dei libri desiderati</p>
+                    <a th:href="@{/wishlist/{u}(u=${utente})}" class="btn btn-primary">Vai alla Wishlist</a>
+                </div>
+            </div>
+
+            <div style="margin-top: 40px; padding: 20px; background: #e8f4e8; border-radius: 8px; text-align: center;">
+                <h3>Hai una wishlist dal Desktop?</h3>
+                <p style="margin: 10px 0;">Importa il file <strong>wishlist.json</strong> dal tuo computer</p>
+                <a href="/wishlist/importa" class="btn btn-secondary">Importa Wishlist da Desktop</a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Gestionale Libri - Carlo & AnnaMaria - by Andrea Pavan</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,26 @@
+# Log files
+*.log
+
+# Maven
+target/
+
+# IDE
+.idea/
+*.iml
+.project
+.classpath
+.settings/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# H2 Database
+*.mv.db
+*.trace.db
+
+# Large files
+*.dmg
+*.exe
+*.msi
+target/

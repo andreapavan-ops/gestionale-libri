@@ -1,0 +1,20 @@
+{
+  "AnnaMaria": [
+    {
+      "titolo": "Fiori per Algernon",
+      "autore": "Daniel Keyes",
+      "note": "",
+      "dataAggiunta": "22/12/2025",
+      "acquistato": false
+    }
+  ],
+  "Carlo": [
+    {
+      "titolo": "Le otto montagne",
+      "autore": "Paolo Cognetti",
+      "note": "",
+      "dataAggiunta": "22/12/2025",
+      "acquistato": false
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestionale Libri - Home</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <header>
+        <h1>📚 Gestionale Biblioteca</h1>
+        <p>Carlo & AnnaMaria</p>
+    </header>
+
+    <nav>
+        <a href="/" class="active">Home</a>
+        <a href="/libri">Catalogo</a>
+        <a href="/libri/nuovo">Aggiungi Libro</a>
+        <a href="/wishlist">Wishlist</a>
+        <a href="/libri/importa">Importa</a>
+    </nav>
+
+    <main>
+        <div class="hero">
+            <h2>Benvenuto nella tua Biblioteca Personale</h2>
+            <p>Gestisci la tua collezione di libri online</p>
+            <div class="stats">
+                <div class="stat-card">
+                    <span class="stat-number" th:text="${totaleLibri}">0</span>
+                    <span class="stat-label">Libri in collezione</span>
+                </div>
+            </div>
+            <a href="/libri" class="btn btn-primary">Vai al Catalogo</a>
+            <a href="/libri/nuovo" class="btn btn-secondary">Aggiungi Libro</a>
+        </div>
+
+        <div class="recent-books" th:if="${not #lists.isEmpty(libri)}">
+            <h3>Ultimi libri aggiunti</h3>
+            <div class="book-grid">
+                <div class="book-card" th:each="libro, iter : ${libri}" th:if="${iter.index < 4}">
+                    <h4 th:text="${libro.titolo}">Titolo</h4>
+                    <p class="author" th:text="${libro.autore}">Autore</p>
+                    <p class="genre" th:text="${libro.genere}">Genere</p>
+                    <a th:href="@{/libri/dettaglio/{isbn}(isbn=${libro.isbn})}" class="btn btn-small">Dettagli</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Gestionale Libri - Carlo & AnnaMaria - by Andrea Pavan</p>
+    </footer>
+</body>
+</html>
