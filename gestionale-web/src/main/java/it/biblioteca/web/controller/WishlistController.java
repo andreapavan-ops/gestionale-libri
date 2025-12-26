@@ -10,6 +10,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -132,5 +138,44 @@ public class WishlistController {
         }
 
         return "redirect:/wishlist";
+    }
+
+    @GetMapping("/esporta")
+    public ResponseEntity<byte[]> esportaWishlist() {
+        try {
+            Map<String, List<Map<String, Object>>> wishlistJson = new HashMap<>();
+
+            for (String utente : wishlistService.getUtenti()) {
+                List<WishlistItemEntity> items = wishlistService.getWishlist(utente);
+                List<Map<String, Object>> itemsJson = new ArrayList<>();
+
+                for (WishlistItemEntity item : items) {
+                    Map<String, Object> itemMap = new HashMap<>();
+                    itemMap.put("titolo", item.getTitolo());
+                    itemMap.put("autore", item.getAutore());
+                    itemMap.put("note", item.getNote());
+                    itemMap.put("dataAggiunta", item.getDataAggiunta());
+                    itemMap.put("acquistato", item.isAcquistato());
+                    itemsJson.add(itemMap);
+                }
+
+                wishlistJson.put(utente, itemsJson);
+            }
+
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.enable(SerializationFeature.INDENT_OUTPUT);
+            byte[] jsonBytes = mapper.writeValueAsBytes(wishlistJson);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.setContentDispositionFormData("attachment", "wishlist.json");
+
+            return ResponseEntity.ok()
+                .headers(headers)
+                .body(jsonBytes);
+
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 }

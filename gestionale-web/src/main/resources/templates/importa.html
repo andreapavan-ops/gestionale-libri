@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Importa Libri da Desktop</title>
+    <title>Sincronizza Dati</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
@@ -17,44 +17,83 @@
         <a href="/libri">Catalogo</a>
         <a href="/libri/nuovo">Aggiungi Libro</a>
         <a href="/wishlist">Wishlist</a>
-        <a href="/libri/importa" class="active">Importa</a>
+        <a href="/libri/importa" class="active">Sincronizza</a>
     </nav>
 
     <main>
-        <div class="form-container">
-            <h2>Importa Libri da Desktop</h2>
-
-            <p style="margin-bottom: 20px; color: #666;">
-                Carica il file <strong>libri.json</strong> generato dalla versione desktop
-                per importare tutti i libri nel database online.
-            </p>
+        <div class="form-container" style="max-width: 900px;">
+            <h2>Sincronizza Dati Desktop / Web</h2>
 
             <!-- Messaggi -->
             <div class="alert alert-error" th:if="${errore}" th:text="${errore}"></div>
             <div class="alert alert-success" th:if="${successo}" th:text="${successo}"></div>
 
-            <form th:action="@{/libri/importa}" method="post" enctype="multipart/form-data">
-                <div class="form-group">
-                    <label for="file">Seleziona file JSON</label>
-                    <input type="file" id="file" name="file" accept=".json" required
-                           style="padding: 10px; border: 2px dashed #ccc; border-radius: 8px; width: 100%;">
-                    <small>Il file si trova nella cartella dove hai avviato l'applicazione desktop</small>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 20px;">
+
+                <!-- IMPORTA (Desktop -> Web) -->
+                <div style="padding: 25px; background: #e8f4e8; border-radius: 12px; border: 2px solid #4CAF50;">
+                    <h3 style="color: #2e7d32; margin-bottom: 15px;">Importa da Desktop</h3>
+                    <p style="color: #666; margin-bottom: 20px;">
+                        Carica i file JSON dal desktop per aggiornare i dati online
+                    </p>
+
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="margin-bottom: 10px;">Libri (libri.json)</h4>
+                        <form th:action="@{/libri/importa}" method="post" enctype="multipart/form-data">
+                            <input type="file" name="file" accept=".json" required
+                                   style="padding: 8px; border: 2px dashed #4CAF50; border-radius: 8px; width: 100%; margin-bottom: 10px;">
+                            <button type="submit" class="btn btn-primary" style="width: 100%;">Importa Libri</button>
+                        </form>
+                    </div>
+
+                    <div>
+                        <h4 style="margin-bottom: 10px;">Wishlist (wishlist.json)</h4>
+                        <form th:action="@{/wishlist/importa}" method="post" enctype="multipart/form-data">
+                            <input type="file" name="file" accept=".json" required
+                                   style="padding: 8px; border: 2px dashed #4CAF50; border-radius: 8px; width: 100%; margin-bottom: 10px;">
+                            <button type="submit" class="btn btn-primary" style="width: 100%;">Importa Wishlist</button>
+                        </form>
+                    </div>
                 </div>
 
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">Importa Libri</button>
-                    <a href="/libri" class="btn btn-secondary">Annulla</a>
-                </div>
-            </form>
+                <!-- ESPORTA (Web -> Desktop) -->
+                <div style="padding: 25px; background: #e3f2fd; border-radius: 12px; border: 2px solid #2196F3;">
+                    <h3 style="color: #1565c0; margin-bottom: 15px;">Esporta per Desktop</h3>
+                    <p style="color: #666; margin-bottom: 20px;">
+                        Scarica i file JSON per aggiornare l'app desktop
+                    </p>
 
-            <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
-                <h3 style="margin-bottom: 10px;">Come trovare il file libri.json:</h3>
-                <ol style="margin-left: 20px; line-height: 1.8;">
-                    <li>Apri il Finder (Mac) o Esplora File (Windows)</li>
-                    <li>Vai nella cartella dove hai avviato l'applicazione desktop</li>
-                    <li>Cerca il file <code style="background: #e9ecef; padding: 2px 6px; border-radius: 4px;">libri.json</code></li>
-                    <li>Selezionalo e caricalo qui sopra</li>
-                </ol>
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="margin-bottom: 10px;">Libri</h4>
+                        <a href="/libri/esporta" class="btn btn-secondary" style="display: block; text-align: center; background: #2196F3; color: white;">
+                            Scarica libri.json
+                        </a>
+                    </div>
+
+                    <div>
+                        <h4 style="margin-bottom: 10px;">Wishlist</h4>
+                        <a href="/wishlist/esporta" class="btn btn-secondary" style="display: block; text-align: center; background: #2196F3; color: white;">
+                            Scarica wishlist.json
+                        </a>
+                    </div>
+
+                    <div style="margin-top: 20px; padding: 15px; background: #fff; border-radius: 8px;">
+                        <small style="color: #666;">
+                            <strong>Come usare:</strong><br>
+                            1. Scarica i file JSON<br>
+                            2. Copiali nella cartella del desktop<br>
+                            3. Riavvia l'app desktop
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 30px; padding: 20px; background: #fff3e0; border-radius: 8px; border-left: 4px solid #ff9800;">
+                <h4 style="color: #e65100; margin-bottom: 10px;">Nota sulla sincronizzazione</h4>
+                <p style="color: #666; line-height: 1.6;">
+                    I dati vengono <strong>uniti</strong>, non sostituiti. Se un libro esiste gia con lo stesso ISBN,
+                    verra aggiornato. I nuovi libri verranno aggiunti. Nessun dato viene eliminato automaticamente.
+                </p>
             </div>
         </div>
     </main>

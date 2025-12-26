@@ -11,6 +11,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -194,5 +200,51 @@ public class LibroController {
         }
 
         return "redirect:/libri";
+    }
+
+    @GetMapping("/libri/esporta")
+    public ResponseEntity<byte[]> esportaLibri() {
+        try {
+            List<LibroEntity> libri = libroService.getTuttiLibri();
+            List<Map<String, Object>> libriJson = new ArrayList<>();
+
+            for (LibroEntity libro : libri) {
+                Map<String, Object> libroMap = new HashMap<>();
+                libroMap.put("isbn", libro.getIsbn());
+                libroMap.put("titolo", libro.getTitolo());
+                libroMap.put("autore", libro.getAutore());
+                libroMap.put("annoPubblicazione", libro.getAnnoPubblicazione());
+                libroMap.put("genere", libro.getGenere());
+
+                // Aggiungi recensioni
+                List<Map<String, Object>> recensioniJson = new ArrayList<>();
+                for (RecensioneEntity rec : libro.getRecensioni()) {
+                    Map<String, Object> recMap = new HashMap<>();
+                    recMap.put("utente", rec.getUtente());
+                    recMap.put("stelle", rec.getStelle());
+                    recMap.put("commento", rec.getCommento());
+                    recMap.put("data", rec.getData());
+                    recensioniJson.add(recMap);
+                }
+                libroMap.put("recensioni", recensioniJson);
+
+                libriJson.add(libroMap);
+            }
+
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.enable(SerializationFeature.INDENT_OUTPUT);
+            byte[] jsonBytes = mapper.writeValueAsBytes(libriJson);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.setContentDispositionFormData("attachment", "libri.json");
+
+            return ResponseEntity.ok()
+                .headers(headers)
+                .body(jsonBytes);
+
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 }
