@@ -12,7 +12,82 @@ gestionale-libri/
 └── pom.xml               # Parent POM Maven
 ```
 
-## Requisiti
+## Installazione Rapida (Utenti non tecnici)
+
+### Passo 1: Installa Java 21
+
+**Windows:**
+1. Vai su https://adoptium.net/
+2. Clicca sul pulsante grande "Latest LTS Release" (dovrebbe mostrare Java 21)
+3. Scarica il file `.msi` per Windows
+4. Doppio click sul file scaricato e segui l'installazione (clicca sempre "Avanti")
+5. **Importante:** Alla schermata "Custom Setup", assicurati che "Set JAVA_HOME variable" sia selezionato
+
+**Mac:**
+1. Vai su https://adoptium.net/
+2. Scarica il file `.pkg` per macOS
+3. Doppio click e segui l'installazione
+
+**Verifica installazione:** Apri il terminale/prompt dei comandi e digita:
+```
+java -version
+```
+Dovresti vedere "openjdk version 21" o simile.
+
+### Passo 2: Copia la cartella del programma
+
+1. Copia l'intera cartella `GESTIONALE_LIBRI` sul nuovo PC (tramite chiavetta USB, cloud, ecc.)
+2. Mettila dove preferisci (es. Documenti, Desktop)
+
+### Passo 3: Avvia il programma
+
+**Windows:**
+- Doppio click su `avvia.bat`
+- Oppure doppio click su `GestionaleLibri.jar`
+
+**Mac/Linux:**
+- Apri il terminale nella cartella del programma
+- Esegui: `./avvia.sh`
+- Oppure: `java -jar GestionaleLibri.jar`
+
+### Risoluzione problemi comuni
+
+| Problema | Soluzione |
+|----------|-----------|
+| "Java non trovato" | Reinstalla Java 21 da adoptium.net |
+| Il JAR non si apre con doppio click | Click destro > Apri con > Java |
+| Errore "accesso negato" su Mac/Linux | Esegui: `chmod +x avvia.sh` |
+
+---
+
+## Creare un Installer Windows (.exe)
+
+Se vuoi creare un file `.exe` che includa Java (l'utente finale non dovrà installare nulla):
+
+### Requisiti per creare l'installer
+
+1. **JDK 21** (non JRE!) - Lo stesso di prima da https://adoptium.net/
+2. **WiX Toolset 3.x** - Scarica da https://wixtoolset.org/releases/ e installa
+
+### Procedura
+
+1. Apri la cartella `installer/windows_build/`
+2. Doppio click su `crea_installer.bat`
+3. Attendi il completamento (può richiedere qualche minuto)
+4. Il file `Gestionale Libri-1.0.exe` verrà creato nella cartella `output/`
+
+### Cosa fa l'installer creato
+
+- Installa il programma come un normale software Windows
+- Include Java (l'utente NON deve installare Java!)
+- Crea collegamento nel Menu Start
+- Crea collegamento sul Desktop
+
+**Nota:** Devi eseguire lo script su Windows per creare un installer Windows.
+
+---
+
+## Requisiti (per sviluppatori)
 
 - Java 21
 - Maven 3.8+
