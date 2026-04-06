@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Vocabolario</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .quiz-card { max-width: 580px; margin: 30px auto; background: var(--card-bg, #fff);
+                     padding: 40px 35px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+                     text-align: center; }
+        .quiz-parola { font-size: 2.5rem; font-weight: bold; color: var(--primary, #3498db);
+                       margin: 20px 0; letter-spacing: 1px; }
+        .quiz-subtitle { color: #888; font-size: 0.95rem; margin-bottom: 30px; }
+        .opzioni { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+        .opzione-btn { padding: 14px 10px; border: 2px solid #ddd; border-radius: 10px;
+                       background: #fff; cursor: pointer; font-size: 1rem; transition: all 0.2s;
+                       color: #333; }
+        .opzione-btn:hover { border-color: var(--primary, #3498db);
+                              background: rgba(52,152,219,0.08); color: var(--primary, #3498db); }
+        .esito-box { padding: 15px 20px; border-radius: 10px; margin: 20px 0;
+                     font-size: 1.05rem; font-weight: bold; }
+        .esito-corretto { background: #eafaf1; color: #1e8449; border: 2px solid #27ae60; }
+        .esito-sbagliato { background: #fef9f0; color: #b7770d; border: 2px solid #f39c12; }
+        .quiz-counter { color: #aaa; font-size: 0.88rem; margin-bottom: 10px; }
+        .completed-box { text-align: center; padding: 40px 20px; }
+        .completed-box h3 { font-size: 1.8rem; color: #27ae60; margin-bottom: 15px; }
+        .livello-bar { display: flex; align-items: center; gap: 10px; margin-top: 25px;
+                       font-size: 0.85rem; color: #888; justify-content: center; }
+        .dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; }
+        .scrivi-form { margin-top: 20px; }
+        .scrivi-form input { width: 100%; padding: 12px; font-size: 1.1rem; border: 2px solid #ddd;
+                              border-radius: 8px; text-align: center; box-sizing: border-box;
+                              margin-bottom: 10px; }
+        .scrivi-form input:focus { outline: none; border-color: var(--primary, #3498db); }
+        .mode-toggle { display: flex; gap: 8px; justify-content: center; margin-bottom: 20px; }
+        .mode-btn { padding: 6px 18px; border-radius: 20px; border: 2px solid var(--primary, #3498db);
+                    cursor: pointer; font-size: 0.88rem; background: #fff;
+                    color: var(--primary, #3498db); }
+        .mode-btn.active { background: var(--primary, #3498db); color: #fff; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>📚 Gestionale Biblioteca</h1>
+        <p>Carlo &amp; AnnaMaria</p>
+    </header>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="/libri">Catalogo</a>
+        <a href="/libri/nuovo">Aggiungi Libro</a>
+        <a href="/wishlist">Wishlist</a>
+        <a href="/vocabolario">Vocabolario</a>
+        <a href="/libri/importa">Sincronizza</a>
+    </nav>
+
+    <main>
+        <h2>Quiz Vocabolario</h2>
+
+        <!-- Tutte memorizzate -->
+        <div th:if="${nessunDaStudiare}" class="quiz-card completed-box">
+            <h3>Complimenti!</h3>
+            <p>Hai memorizzato tutte le parole salvate.</p>
+            <p style="color:#aaa; margin:10px 0 25px;">Aggiungi nuove parole per continuare ad allenarti.</p>
+            <a href="/vocabolario/aggiungi" class="btn btn-primary">Aggiungi Parola</a>
+            <a href="/vocabolario" class="btn btn-secondary" style="margin-left:10px;">Vai al Vocabolario</a>
+        </div>
+
+        <!-- Quiz attivo -->
+        <div th:if="${not nessunDaStudiare}" class="quiz-card">
+
+            <!-- Esito risposta precedente -->
+            <div th:if="${esito == 'corretto'}" class="esito-box esito-corretto"
+                 th:text="${messaggioEsito}"></div>
+            <div th:if="${esito == 'sbagliato'}" class="esito-box esito-sbagliato"
+                 th:text="${messaggioEsito}"></div>
+
+            <div class="quiz-counter">
+                Parole da studiare ancora: <strong th:text="${totaleRimanenti}">0</strong>
+            </div>
+
+            <div class="quiz-subtitle">Come si traduce in italiano?</div>
+            <div class="quiz-parola" th:text="${parola.parolaInglese}">word</div>
+
+            <div th:if="${parola.contesto != null and not #strings.isEmpty(parola.contesto)}"
+                 style="color:#aaa; font-size:0.85rem; margin-bottom:15px;"
+                 th:text="'Contesto: ' + ${parola.contesto}"></div>
+
+            <!-- Toggle modalità -->
+            <div class="mode-toggle">
+                <button class="mode-btn active" id="btnSceltaMultipla" onclick="mostraSceltaMultipla()">
+                    Scelta multipla
+                </button>
+                <button class="mode-btn" id="btnScrivi" onclick="mostraScrivi()">
+                    Scrivi la risposta
+                </button>
+            </div>
+
+            <!-- Modalità: Scelta Multipla -->
+            <div id="sezioneSceltaMultipla">
+                <div class="opzioni">
+                    <form th:each="opzione : ${opzioni}"
+                          th:action="@{/vocabolario/quiz/verifica}" method="post">
+                        <input type="hidden" name="idParola" th:value="${parola.id}">
+                        <input type="hidden" name="risposta" th:value="${opzione}">
+                        <button type="submit" class="opzione-btn" th:text="${opzione}">opzione</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Modalità: Scrivi la risposta -->
+            <div id="sezioneScrivi" style="display:none;">
+                <form th:action="@{/vocabolario/quiz/verifica}" method="post" class="scrivi-form">
+                    <input type="hidden" name="idParola" th:value="${parola.id}">
+                    <input type="text" name="risposta" placeholder="Scrivi la traduzione italiana..."
+                           autocomplete="off" autofocus>
+                    <button type="submit" class="btn btn-primary" style="width:100%;">Conferma</button>
+                </form>
+            </div>
+
+            <!-- Legenda livelli -->
+            <div class="livello-bar">
+                <span class="dot" style="background:#e74c3c;"></span> Nuovo
+                <span class="dot" style="background:#f39c12;"></span> Visto
+                <span class="dot" style="background:#3498db;"></span> Quasi
+                <span class="dot" style="background:#27ae60;"></span> Memorizzato
+            </div>
+            <div style="margin-top:8px;font-size:0.82rem;color:#bbb;">
+                Livello attuale di questa parola:
+                <span th:style="'color:' + ${parola.livelloColore}; font-weight:bold;"
+                      th:text="${parola.livelloVisual}">Nuovo</span>
+            </div>
+        </div>
+
+        <div style="text-align:center; margin-top:15px;">
+            <a href="/vocabolario" class="btn btn-secondary">Torna al Vocabolario</a>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Gestionale Libri - Carlo &amp; AnnaMaria - by Andrea Pavan</p>
+    </footer>
+
+    <script>
+        function mostraSceltaMultipla() {
+            document.getElementById('sezioneSceltaMultipla').style.display = 'block';
+            document.getElementById('sezioneScrivi').style.display = 'none';
+            document.getElementById('btnSceltaMultipla').classList.add('active');
+            document.getElementById('btnScrivi').classList.remove('active');
+        }
+        function mostraScrivi() {
+            document.getElementById('sezioneSceltaMultipla').style.display = 'none';
+            document.getElementById('sezioneScrivi').style.display = 'block';
+            document.getElementById('btnScrivi').classList.add('active');
+            document.getElementById('btnSceltaMultipla').classList.remove('active');
+            document.querySelector('#sezioneScrivi input[type=text]').focus();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aggiungi Parola</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .form-card { max-width: 550px; margin: 0 auto; background: var(--card-bg, #fff);
+                     padding: 30px; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: bold; color: #555; }
+        .form-group input, .form-group textarea {
+            width: 100%; padding: 10px 14px; border: 1px solid #ddd;
+            border-radius: 8px; font-size: 1rem; box-sizing: border-box; }
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none; border-color: var(--primary, #3498db);
+            box-shadow: 0 0 0 3px rgba(52,152,219,0.15); }
+        .traduci-btn { background: #27ae60; color: #fff; border: none; padding: 8px 16px;
+                       border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin-top: 6px; }
+        .traduci-btn:hover { background: #219a52; }
+        .traduci-result { margin-top: 8px; padding: 8px 12px; background: #eafaf1;
+                          border-radius: 6px; color: #1e8449; font-size: 0.9rem; display: none; }
+        .hint { font-size: 0.82rem; color: #999; margin-top: 4px; }
+        .form-actions { display: flex; gap: 12px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>📚 Gestionale Biblioteca</h1>
+        <p>Carlo &amp; AnnaMaria</p>
+    </header>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="/libri">Catalogo</a>
+        <a href="/libri/nuovo">Aggiungi Libro</a>
+        <a href="/wishlist">Wishlist</a>
+        <a href="/vocabolario" class="active">Vocabolario</a>
+        <a href="/libri/importa">Sincronizza</a>
+    </nav>
+
+    <main>
+        <h2>Aggiungi Parola Inglese</h2>
+
+        <div th:if="${errore}" class="alert alert-error" th:text="${errore}"></div>
+
+        <div class="form-card">
+            <form th:action="@{/vocabolario/salva}" method="post" th:object="${vocabolo}">
+
+                <div class="form-group">
+                    <label for="parolaInglese">Parola inglese *</label>
+                    <input type="text" id="parolaInglese" th:field="*{parolaInglese}"
+                           placeholder="es. ambiguous" autocomplete="off">
+                    <button type="button" class="traduci-btn" onclick="traduciParola()">
+                        Traduci automaticamente
+                    </button>
+                    <div id="traduciResult" class="traduci-result"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="traduzione">Traduzione italiana *</label>
+                    <input type="text" id="traduzione" th:field="*{traduzione}"
+                           placeholder="es. ambiguo, poco chiaro">
+                    <div class="hint">Puoi lasciare vuoto e usare la traduzione automatica.</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="contesto">Contesto (opzionale)</label>
+                    <input type="text" id="contesto" th:field="*{contesto}"
+                           placeholder="es. dal video su Python, dalla serie TV...">
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Salva</button>
+                    <a href="/vocabolario" class="btn btn-secondary">Annulla</a>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Gestionale Libri - Carlo &amp; AnnaMaria - by Andrea Pavan</p>
+    </footer>
+
+    <script>
+        function traduciParola() {
+            const parola = document.getElementById('parolaInglese').value.trim();
+            if (!parola) { alert('Inserisci prima la parola inglese.'); return; }
+
+            const btn = document.querySelector('.traduci-btn');
+            btn.textContent = 'Traduzione in corso...';
+            btn.disabled = true;
+
+            fetch('/vocabolario/api/traduci?parola=' + encodeURIComponent(parola))
+                .then(r => r.json())
+                .then(data => {
+                    btn.textContent = 'Traduci automaticamente';
+                    btn.disabled = false;
+                    if (data.traduzione) {
+                        document.getElementById('traduzione').value = data.traduzione;
+                        const box = document.getElementById('traduciResult');
+                        box.textContent = 'Traduzione trovata: ' + data.traduzione;
+                        box.style.display = 'block';
+                    } else {
+                        alert('Traduzione non trovata. Inseriscila manualmente.');
+                    }
+                })
+                .catch(() => {
+                    btn.textContent = 'Traduci automaticamente';
+                    btn.disabled = false;
+                    alert('Errore di connessione. Inserisci la traduzione manualmente.');
+                });
+        }
+    </script>
+</body>
+</html>
